@@ -1,0 +1,239 @@
+swagger: '2.0'
+info:
+  title:  Test2 API
+  description: 'AI Customer Service application, built during the Cloud and Big Data course at Columbia University.'
+  version: 1.0.0
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+
+paths:
+  /records:
+    get:
+      summary: records search method
+      
+      operationId: searchrecords
+      parameters:
+        - in: query
+          name: t
+          
+          type: string
+          description: the string to be searched
+          
+        - in: query
+          name: user_id
+          
+          type: string
+          description: the string to be searched
+        
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/BotResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      
+    
+  /preferences:
+    get:
+      summary: preferences search method
+      
+      operationId: searchpreferences
+      parameters:
+        - in: query
+          name: t
+          
+          type: string
+          description: the string to be searched
+          
+        - in: query
+          name: p
+          
+          type: string
+          description: the preference
+        
+        - in: query
+          name: user_id
+          
+          type: string
+          description: the string to be searched
+          
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/BotResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: The endpoint for the Natural Language Understanding API.
+      description: |
+        This API takes in one or more messages from the client and returns
+        one or more messages as a response. The API leverages the NLP
+        backend functionality, paired with state and profile information
+        and returns a context-aware reply.
+      tags:
+        - NLU
+      operationId: tset
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/preferenceput'
+      responses:
+        '200':
+          description: A Chatbot response
+          schema:
+            $ref: '#/definitions/BotResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /checklists:
+    get:
+      summary: checklists search method
+      
+      operationId: searchchecklists
+      parameters:
+        - in: query
+          name: d
+          
+          type: string
+          description: the date to be searched
+          
+        - in: query
+          name: user_id
+          
+          type: string
+          description: the string to be searched
+        
+        
+          
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/BotResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /chatbot:
+    post:
+      summary: The endpoint for the Natural Language Understanding API.
+      description: |
+        This API takes in one or more messages from the client and returns
+        one or more messages as a response. The API leverages the NLP
+        backend functionality, paired with state and profile information
+        and returns a context-aware reply.
+      tags:
+        - NLU
+      operationId: sendMessage
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BotRequest'
+      responses:
+        '200':
+          description: A Chatbot response
+          schema:
+            $ref: '#/definitions/BotResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  BotRequest:
+    type: object
+    properties:
+      messages:
+        type: string
+      user_id:
+        type: string
+  BotResponse:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  Message:
+    type: object
+    properties:
+      type:
+        type: string
+      unstructured:
+        $ref: '#/definitions/UnstructuredMessage'
+  UnstructuredMessage:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      timestamp:
+        type: string
+        format: datetime
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  preferenceput:
+    type: object
+    properties:
+      t:
+        type: string
+        
+      p:
+        type: integer
+        format: int32
+      id:
+        type: string
+      user_id:
+        type: string
